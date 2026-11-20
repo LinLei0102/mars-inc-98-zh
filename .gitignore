@@ -1,0 +1,25 @@
+# 构建产物
+dist/
+
+# 运行/扫描临时产物
+.scratch/
+shots/
+.tmp/
+
+# 依赖与工具缓存
+node_modules/
+.tools/
+
+# 从页面里抽出来的原始资产（由 game.js 内嵌 base64 还原，不入库）
+assets/
+
+# 原始页面快照（3.6 MB，与 template + src 等价，需要时按 README 重新下载）
+index.html
+
+# prettier 重排后的副本（可由 src/game.js 生成）
+src/game.pretty.js
+
+# 系统 / 编辑器
+.DS_Store
+Thumbs.db
+*.log

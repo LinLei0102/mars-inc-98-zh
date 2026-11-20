@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><!-- frame-runtime --><!-- /frame-runtime --><meta charset="utf8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head>
+<body>
+<title>Mars Inc 98</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=VT323&amp;display=swap" rel="stylesheet">
+<style>/*__CSS__*/</style>
+
+<div id="title">
+  <canvas id="title-sky"></canvas>
+  <div class="t-center">
+    <img class="t-logoimg" id="t-logoimg" alt="Mars Inc 98">
+    <div class="t-menu"><button class="btn" data-tact="start">Start Game</button><button class="btn" data-tact="quit">Quit Game</button></div>
+  </div>
+  <button class="btn t-wish" data-tact="wish"><img class="px" data-spr="steam" alt=""><span><small>WISHLIST ON</small><b>STEAM</b></span></button>
+  <div class="t-crt"></div>
+</div>
+<div id="app">
+ <div id="shell">
+  <div class="win" id="appwin">
+    <div class="tbar"><span>Dashboard</span>
+      <span class="ctl"><span class="tbtn" aria-hidden="true">_</span><span class="tbtn" aria-hidden="true">□</span><span class="tbtn" aria-hidden="true">×</span></span></div>
+    <nav class="menubar" id="menubar" aria-label="Menu bar"></nav>
+    <div class="drop win" id="tl-helpmenu" role="menu" hidden="" style="position:fixed"></div>
+    <div class="toolbar" role="toolbar" aria-label="Main toolbar">
+      <button class="tool" data-act="tab" data-id="craft" id="tl-craft"><img class="px i32" data-spr="habitat" alt="">Crafting</button>
+      <button class="tool" data-act="tab" data-id="power" id="tl-power"><img class="px i32" data-spr="panel" alt="">Solar</button>
+      <button class="tool" data-act="tab" data-id="mine" id="tl-mine"><img class="px i32" data-spr="minecart" alt="">Mine</button>
+      <button class="tool" data-act="tab" data-id="terra" id="tl-terra"><img class="px i32" data-spr="tdrill" alt="">Terraform</button>
+      <button class="tool" data-act="tab" data-id="launch" id="tl-launch"><img class="px i32" data-spr="rocket" alt="">Launch</button>
+      <button class="tool" data-act="tab" data-id="hydro" id="tl-hydro"><img class="px i32" data-spr="drop" alt="">Hydro</button>
+      <button class="tool" data-act="tab" data-id="bio" id="tl-bio"><img class="px i32" data-spr="moss" alt="">Biolab</button>
+      <div class="tsep2"></div>
+      <button class="tool" data-act="save"><img class="px i32" data-spr="save" alt="">Save</button>
+      <button class="tool" data-act="devkit" id="tl-dev"><img class="px i32" data-spr="dev" alt="">Dev Kit</button>
+      <button class="tool" data-act="helpmenu" aria-haspopup="menu"><img class="px i32" data-spr="help" alt="">Help</button>
+      <button class="tool wishtool" data-act="wishlist" title="Wishlist Mars Inc 98 on Steam"><img class="px i32" data-spr="steam" alt=""><span class="wave" data-wave="Wishlist on Steam"></span></button>
+    </div>
+    <div id="work">
+      <!-- LEFT -->
+      <div class="col">
+        <section class="win" id="w-ovr" aria-label="Planetary overview">
+          <div class="tbar"><img class="px" data-spr="planet" alt=""><span>Planetary Overview</span><span class="ctl"><span class="tbtn" aria-hidden="true">×</span></span></div>
+          <div class="wbody" style="display:flex;flex-direction:column;gap:4px;overflow:visible">
+            <div class="mars-wrap sunken"><canvas id="mars" class="px" width="96" height="96" aria-label="Pixel-art view of Mars"></canvas></div>
+            <div class="phases" id="phases" hidden=""></div>
+            <div class="stage-label"><span id="stage-name">Stage 1/10 · Fog Clearance</span><span id="stage-pct" class="num">0%</span></div>
+            <div class="prog sunken"><i id="stage-bar" style="width:0%"></i></div>
+          </div>
+        </section>
+        <section class="win" id="w-goals" aria-label="Mission goals">
+          <div class="tbar"><span>Current Mission Goals</span><span class="ctl"><span class="tbtn" aria-hidden="true">×</span></span></div>
+          <div class="wbody" style="padding:3px"><div class="goals lcd sunken" id="goals"></div></div>
+        </section>
+        <section class="win" id="w-out" aria-label="Output log">
+          <div class="tbar"><img class="px" data-spr="log" alt=""><span>Output Log</span><span class="ctl"><span class="tbtn" aria-hidden="true">×</span></span></div>
+          <div class="wbody" style="padding:3px;display:flex"><div class="outlog lcd sunken g" id="outlog" aria-label="Output log: everything you craft"></div></div>
+        </section>
+      </div>
+
+      <!-- MAIN -->
+      <section class="win" id="w-main" aria-label="Main window">
+        <div class="tbar"><img class="px" id="main-ico" data-spr="habitat" alt=""><span id="main-title">Crafting Station</span>
+          <span class="ctl"><span class="tbtn" aria-hidden="true">_</span><span class="tbtn" aria-hidden="true">×</span></span></div>
+        <div class="wbody">
+          <div id="playbar" hidden=""><b id="playname"></b><span id="playdesc"></span>
+            <span class="playbtns"><button class="btn" data-act="play" data-id="drill">Drill</button><button class="btn" data-act="play" data-id="pump">Pump</button><button class="btn" data-act="play" data-id="heater">Heater</button><button class="btn" data-act="play" data-id="spray">Spraying</button><button class="btn" data-act="play" data-id="splice">Splicer</button><button class="btn" data-act="play" data-id="sprinkle">Spreading</button><button class="btn" data-act="play" data-id="life">Life</button><button class="btn" data-act="play" data-id="launch">Launch</button><button class="btn" data-act="exitplay" style="font-weight:bold">Exit Playground</button></span></div>
+          <div class="tabs" role="tablist">
+            <button class="tab" role="tab" data-act="tab" data-id="craft" id="tab-craft"><img class="px" data-spr="habitat" alt="">Crafting Station</button>
+            <button class="tab" role="tab" data-act="tab" data-id="power" id="tab-power"><img class="px" data-spr="panel" alt="">Solar Array</button>
+            <button class="tab" role="tab" data-act="tab" data-id="mine" id="tab-mine"><img class="px" data-spr="minecart" alt="">Mine</button>
+            <button class="tab" role="tab" data-act="tab" data-id="terra" id="tab-terra"><img class="px" data-spr="tdrill" alt="">Terraform</button>
+            <button class="tab" role="tab" data-act="tab" data-id="hydro" id="tab-hydro"><img class="px" data-spr="drop" alt="">Hydro</button>
+            <button class="tab" role="tab" data-act="tab" data-id="bio" id="tab-bio"><img class="px" data-spr="moss" alt="">Biolab</button>
+            <button class="tab" role="tab" data-act="tab" data-id="launch" id="tab-launch"><img class="px" data-spr="rocket" alt="">Launch Pad</button>
+          </div>
+          <div class="tabpage">
+            <!-- CRAFTING -->
+            <div class="pane" id="pane-craft">
+              <div class="view sunken" id="view3d">
+                <canvas id="c3d"></canvas><div class="scanline"></div>
+                <div class="hud tl">CAM-01 · BASE CAMP</div>
+                <div class="hud tr"><span class="rec"></span>LIVE</div>
+                <div class="hud bl" id="hud-vis">VISIBILITY 18%</div>
+                <div class="nogl" id="nogl" hidden="">3D camera feed offline</div>
+              </div>
+              <fieldset class="grp bp"><legend>Construction</legend>
+                <div class="tiles sunken" id="tiles"></div>
+                <div class="bp-detail sunken" id="bp-detail"></div>
+              </fieldset>
+              <fieldset class="grp refgrp"><legend id="ref-legend">Crafting</legend>
+                <div class="rtabs" id="ref-tabs" role="tablist"><button class="rtab on" role="tab" data-rt="ref">Refinery</button><button class="rtab" role="tab" data-rt="fab"><img class="px" data-spr="options" alt=""> Auto Crafter <img class="px rtlock" data-spr="lock" alt="Locked" hidden=""><span class="rtst"></span></button></div>
+                <div class="ref-wrap sunken" id="ref-pane"><table class="ref"><thead><tr><th>Product</th><th>Input</th><th>Qty</th><th></th></tr></thead><tbody id="ref-body"></tbody></table></div>
+                <div class="fab-pane sunken" id="fab-pane" hidden=""></div>
+              </fieldset>
+            </div>
+            <!-- MINE -->
+            <div class="pane" id="pane-mine" hidden="">
+              <div id="mine-locked" class="notice">
+                <img class="px i32" data-spr="mine" alt="" style="width:64px;height:64px">
+                <b>Mining Rig not constructed</b>
+                <div>Build the Mining Rig from Construction in the Crafting Station (10 E).</div>
+                <button class="btn" data-act="tab" data-id="craft">Open Crafting Station</button>
+              </div>
+              <fieldset class="grp mine-ui"><legend>Available Ores</legend><div class="ore-cards lv98" id="ore-cards"></div></fieldset>
+              <fieldset class="grp mine-ui"><legend>Extraction</legend>
+                <div class="rock sunken" id="rock" data-act="mine" aria-label="Mine selected ore"><span class="depth" id="rock-depth">SHAFT A · 12 m</span><span class="orename" id="rock-oname"></span><img class="px" id="rock-img" alt=""></div>
+                <div class="kv"><b id="rock-name">Iron Ore</b><span id="rock-have" class="num">0</span></div>
+                <button class="btn mine-btn" data-act="mine" id="mine-btn">MINE</button>
+                <div class="kv"><span>Yield per extraction</span><b id="rock-yield">1</b></div>
+              </fieldset>
+              <fieldset class="grp mine-ui"><legend>Mining Upgrades</legend><div class="upg-list" id="mine-upg"></div></fieldset>
+              <div class="mine-bottom mine-ui">
+                <fieldset class="grp dronefs"><legend>Auto Mining</legend>
+                  <div class="dronegrid"><div class="dronectl"><div class="autostat" id="autostat"></div><div class="dtarget" id="dtarget"></div><div class="bays" id="bays"></div></div>
+                  <div class="upg-list" id="drone-upg"></div></div></fieldset>
+                <fieldset class="grp"><legend>Mining Summary</legend><div class="summary sheet" id="mine-sum"></div></fieldset>
+              </div>
+            </div>
+            <!-- POWER -->
+            <div class="pane" id="pane-power" hidden="">
+              <fieldset class="grp"><legend>Battery Bank</legend>
+                <div class="bigbar sunken"><i id="pw-fill"></i><span id="pw-txt">0/0</span></div>
+                <div class="pw-stats">
+                  <div class="lcd sunken g"><small>Solar input</small><span id="pw-in">+0.5/s</span></div>
+                  <div class="lcd sunken a"><small>Load</small><span id="pw-out">-0.0/s</span></div>
+                  <div class="lcd sunken w"><small>Net</small><span id="pw-net">+0.5/s</span></div>
+                </div>
+                <div class="lcd sunken"><table class="cons" id="cons"></table></div>
+              </fieldset>
+              <fieldset class="grp"><legend id="slots-legend">Solar Array</legend>
+                <div class="slots sunken" id="slots"></div>
+                <div class="insol">
+                  <div class="lcd sunken a"><small>Sun elevation</small><span id="in-sun">41°</span></div>
+                  <div class="lcd sunken a"><small>Dust attenuation</small><span id="in-dust">-12%</span></div>
+                  <div class="lcd sunken a"><small>Per panel</small><span id="in-pp">0.50 E/s</span></div>
+                </div>
+              </fieldset>
+              <fieldset class="grp scope-box"><legend>Power Monitor</legend>
+                <canvas id="scope" class="px sunken" width="300" height="120"></canvas>
+                <div class="scope-legend"><span>Stored energy (yellow) · solar input (green), last 60 s</span><span id="scope-max">cap 25 E</span></div>
+              </fieldset>
+              <fieldset class="grp"><legend>Power Upgrades</legend><div class="upg-list" id="pow-upg"></div></fieldset>
+            </div>
+            <!-- TERRAFORM -->
+            <div class="pane" id="pane-terra" hidden="">
+              <div class="mstrip" id="mstrip"></div>
+              <fieldset class="grp"><legend id="pv-legend">Bore Hole Cross-Section · Site T-1</legend>
+                <div class="pv-wrap sunken" id="pv-wrap"><canvas id="tfv" class="px" width="200" height="120"></canvas>
+                  <div class="pv-hud" id="pv-hud"></div><div class="pv-hud2" id="pv-hud2"></div></div>
+              </fieldset>
+              <div class="tside" id="tside"></div>
+              <div class="tbottom">
+                <fieldset class="grp"><legend id="tc1l">Fuel Reserves</legend><div class="sheet fuelcell" id="tc1"></div></fieldset>
+                <fieldset class="grp"><legend id="tc2l">Reserves</legend><div class="sheet fuelcell" id="tc2"></div></fieldset>
+                <fieldset class="grp"><legend id="tc3l">Output</legend><div class="sheet stat" id="tc3"></div></fieldset>
+              </div>
+            </div>
+            <!-- HYDRO -->
+            <div class="pane" id="pane-hydro" hidden="">
+              <div class="notice" id="hydro-lock"></div>
+              <fieldset class="grp hydro-ui"><legend>Hydro Station · Hellas Basin (drag to rotate)</legend>
+                <div class="pv-wrap sunken" id="hv-wrap" style="cursor:pointer"><canvas id="hv" class="px" width="200" height="120"></canvas>
+                  <div class="pv-hud" id="hv-hud"></div><div class="pv-hud2" id="hv-hud2"></div></div>
+                <div class="crankrow">
+                  <div class="crankbox sunken"><canvas id="crank" class="px" width="80" height="80" aria-label="Hand pump crank: drag clockwise"></canvas><div id="crank-pops"></div><div class="ckhint">DRAG ↻</div></div>
+                  <div class="crankinfo"><b id="ck-title">Hand Pump · drag the red handle clockwise</b>
+                    <div class="kv"><span>Colony tank</span><b id="ck-tank" class="num"></b></div><div class="prog sunken"><i id="ck-tankbar"></i></div>
+                    <div class="kv"><span>Current turn (blue ring)</span><b id="ck-next" class="num"></b></div>
+                    <div class="kv"><span>Line pressure</span><b id="ck-press" class="num"></b></div><div class="prog sunken amber"><i id="ck-pressbar"></i></div>
+                    <div class="kv"><span>Water per turn</span><b id="ck-turn" class="num"></b></div>
+                    <div class="kv"><span>Crank speed</span><b id="ck-rpm" class="num"></b></div>
+                    <div class="kv"><span>Turns by hand</span><b id="ck-turns" class="num"></b></div>
+                    <button class="btn" data-act="crank" id="crank-btn">Pump stroke (¼ turn)</button></div>
+                </div>
+              </fieldset>
+              <div class="tside hydro-ui" id="hside"></div>
+              <fieldset class="grp wide hydro-ui"><legend>Water Budget</legend><div class="sheet" style="overflow:auto"><table class="cons cons98" id="wbudget"></table></div></fieldset>
+            </div>
+            <!-- BIOLAB -->
+            <div class="pane" id="pane-bio" hidden="">
+              <div class="notice" id="bio-lock"></div>
+              <fieldset class="grp bio-ui"><legend>Seed Synthesizer · Incubator Trays</legend><div class="trays" id="trays"></div></fieldset>
+              <div class="tside bio-ui" id="bside"></div>
+              <fieldset class="grp wide bio-ui"><legend>Seed Catalogue</legend><div class="sheet" style="overflow:auto"><table class="cons cons98" id="seedcat"></table></div></fieldset>
+            </div>
+            <!-- LAUNCH -->
+            <div class="pane" id="pane-launch" hidden="">
+              <div class="notice" id="launch-lock"></div>
+              <fieldset class="grp launch-ui"><legend id="lv-legend">Launch Complex LC-1</legend>
+                <div class="pv-wrap sunken" id="lv-wrap"><canvas id="lv" class="px" width="200" height="120"></canvas>
+                  <div class="pv-hud" id="lv-hud"></div><div class="pv-hud2" id="lv-hud2"></div><div class="lv-count" id="lv-count"></div></div>
+              </fieldset>
+              <div class="tside launch-ui" id="lside"></div>
+              <fieldset class="grp wide launch-ui"><legend>Mission Archive · Recovered Logs</legend><div class="sheet archive" id="archive"></div></fieldset>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- RIGHT -->
+      <div class="col">
+        <section class="win" id="w-res" aria-label="Colony resources">
+          <div class="tbar"><img class="px" data-spr="plate" alt=""><span>Colony Resources</span><span class="ctl"><span class="tbtn" aria-hidden="true">×</span></span></div>
+          <div class="wbody" style="padding:3px"><div class="lcd sunken stat" id="res" style="min-height:100%;align-content:start"></div></div>
+        </section>
+        <section class="win" id="w-alerts" aria-label="Alert log">
+          <div class="tbar"><img class="px" data-spr="bolt" alt=""><span>Alert Log</span><span class="ctl"><span class="tbtn" aria-hidden="true">×</span></span></div>
+          <div class="wbody" style="padding:3px"><div class="lcd sunken log" id="log" aria-live="polite"></div></div>
+        </section>
+        <section class="win" id="w-atmo" aria-label="Atmosphere">
+          <div class="tbar"><img class="px" data-spr="atmo" alt=""><span>Atmosphere</span><span class="ctl"><span class="tbtn" aria-hidden="true">×</span></span></div>
+          <div class="wbody" style="padding:3px"><div class="stat lcd sunken" id="atmo"></div></div>
+        </section>
+        <section class="win" id="w-fc" aria-label="Environmental forecast">
+          <div class="tbar"><img class="px" data-spr="options" alt=""><span>Environmental Forecast</span><span class="ctl"><span class="tbtn" aria-hidden="true">×</span></span></div>
+          <div class="wbody" style="padding:3px"><div class="fc lcd sunken"><canvas id="storm" class="px" width="40" height="40"></canvas><div class="fc-txt" id="fc"></div></div></div>
+        </section>
+      </div>
+    </div>
+    <div class="appstatus" hidden="">
+      <div class="sunken hint" id="hint">Build the Mining Rig.</div>
+      <div class="sunken mid" id="sb-state">Running</div>
+      <div class="sunken sol num" id="sb-sol">Sol 1 · 06:00</div>
+    </div>
+  </div>
+ </div>
+
+  <div id="sprocket" hidden=""><div id="spr-bubble" class="spr-bubble" hidden="" role="dialog" aria-live="polite"></div><canvas id="spr-cv" title="Sprocket: click me for a hint"></canvas></div>
+  <div id="taskbar">
+    <button class="btn start" data-act="start" id="start-btn" aria-haspopup="menu"><img class="px" data-spr="start" alt="">Start</button>
+    <div class="tsep"></div>
+    <button class="btn task on"><img class="px" data-spr="planet" alt=""><span>Dashboard</span></button>
+    <button class="btn task" data-act="playground" id="tk-play"><img class="px" data-spr="dev" alt=""><span>Mini-Game Playground</span></button>
+    <div class="tray sunken"><span class="clock num" id="tray-clock">22:00</span></div>
+    <div id="startmenu" class="win" hidden="" role="menu">
+      <div class="strip">Mars Inc 98</div>
+      <ul>
+        <li><button data-act="brief"><img class="px" data-spr="reports" alt="">Mission Briefing</button></li>
+        <li><button data-act="crt"><img class="px" data-spr="options" alt="">Toggle CRT Lines</button></li>
+      </ul>
+    </div>
+  </div>
+</div>
+<div id="modal" hidden=""></div>
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>//__JS__</script>
+</body>
+</html>
+<script defer src="https://static.itch.io/htmlgame.js" type="text/javascript"></script>
