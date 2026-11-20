@@ -28,9 +28,14 @@ docs/strings_for_translation.csv  从源码抽出的候选文案清单（文件+
 node build.mjs          # 英文原始包 → dist/index.html
 node build.mjs --zh     # 中文包     → dist/index.zh.html
 node build.mjs --cdn    # three.js 走 cdnjs（与线上发布包一致）
+node build.mjs --zh --inline   # 单文件自包含版 → dist/index.zh.standalone.html（用于静态托管）
 ```
 
 产物是单文件 HTML，双击即可离线运行（`--zh` 版已挂好中文层）。
+
+### 在线试玩（GitHub Pages）
+
+`gh-pages` 分支里放的是一次 `--zh --inline` 的构建产物（`index.html`，约 4.3 MB，three.js 与中文层全部内联），开启 Pages 后即可直接玩，无需任何依赖。
 
 ## 怎么继续加词条
 
