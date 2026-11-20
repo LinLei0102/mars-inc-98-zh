@@ -37,6 +37,12 @@ node build.mjs --zh --inline   # 单文件自包含版 → dist/index.zh.standal
 
 `gh-pages` 分支里放的是一次 `--zh --inline` 的构建产物（`index.html`，约 4.3 MB，three.js 与中文层全部内联），开启 Pages 后即可直接玩，无需任何依赖。
 
+更新线上版本：
+
+```bash
+bash tools/publish-pages.sh     # 重新构建并强推 gh-pages
+```
+
 ## 怎么继续加词条
 
 1. 改 `i18n/zh-CN.js`：往任意 `Object.assign(DICT, {…})` 里加 `"English": "中文"`；带变量的用 `RULES.unshift([/^…$/, m => …])`。
