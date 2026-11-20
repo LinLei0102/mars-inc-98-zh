@@ -41,7 +41,10 @@ if (ZH) zhBlock = INLINE
 
 out = out.replace(THREE_CDN_TAG, () => threeBlock + zhBlock);
 
-// 3) itch.io 运行时脚本在本地没有意义，去掉
+// 3) 中文包把 <html lang> 一并改掉
+if (ZH) out = out.replace('<html lang="en">', '<html lang="zh-CN">');
+
+// 4) itch.io 运行时脚本在本地没有意义，去掉
 out = out.replace(/<script[^>]*src="https:\/\/static\.itch\.io\/htmlgame\.js"[^>]*>\s*<\/script>/g, '');
 
 await mkdir(join(root, 'dist'), { recursive: true });
