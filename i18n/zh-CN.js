@@ -1195,6 +1195,21 @@
 
 
 
+
+  /* ---------- 第十二轮：解锁框（unlockBox）内的条目与 ★ 前缀 ---------- */
+  Object.assign(DICT, {
+    "Dig it in the Mine tab.": "在矿井页挖到它。",
+    "Craft it in the Refinery.": "在精炼里制造它。",
+    "Load Thorium Rods into the drill here.": "在这里给钻机装填钍棒。",
+  });
+
+  RULES.unshift(
+    [/^★\s*(.+)$/, (m) => { const t = tr(m[1]); return t === m[1] ? m[0] : "★ " + t; }],
+    [/^New tab: (.+)$/i, (m) => "新页面：" + tr(m[1])],
+    [/^New machine: (.+)$/i, (m) => "新机器：" + tr(m[1])],
+    [/^New (?:unlock|item)s?: (.+)$/i, (m) => "新解锁：" + tr(m[1])],
+  );
+
   /* ---------- 第十一轮：按钮上的"电力不足"（被图标切成两段） ---------- */
   RULES.unshift(
     [/^NOT ENOUGH POWER \(need\s*$/i, () => "电力不足（需要"],
