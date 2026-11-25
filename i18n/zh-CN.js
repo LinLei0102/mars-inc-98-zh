@@ -4,6 +4,8 @@
  *      URL 加 ?lang=en 可临时关闭；控制台 MGI18N.report() 查看未命中条目。
  */
 (() => {
+  const HTML_MAP = {};
+
   const DICT = {
     /* ---------- 窗口 / 菜单 ---------- */
     "Mars Inc 98": "火星公司 98",
@@ -940,7 +942,6 @@
     [/^Lv (.+?)$/, (m) => "等级 " + m[1]],
     [/^Motor pumps ×(.+?)$/, (m) => "电机水泵 ×" + m[1]],
     [/^Needs Incubator (.+?) · grows in (.+?) s · \+(.+?)% Life \(first of a species \+(.+?)%\)(.+?)$/, (m) => "需要培养器 " + m[1] + " · " + m[2] + " 秒长成 · 生命 +" + m[3] + "%（该物种首次 +" + m[4] + "%）" + m[5]],
-    [/^Next · Stage (.+?): (.+?)$/, (m) => "下一步 · 阶段 " + m[1] + "：" + m[2]],
     [/^Pressure (.+?) mbar · (.+?) °C · O₂ (.+?)% · (.+?) animal species\.$/, (m) => "气压 " + m[1] + " 毫巴 · " + m[2] + " °C · 氧气 " + m[3] + "% · 动物 " + m[4] + " 种。"],
     [/^RTG generators ×(.+?)$/, (m) => "放射性同位素电源 ×" + m[1]],
     [/^Slot (.+?) · empty$/, (m) => "槽位 " + m[1] + " · 空"],
@@ -1100,7 +1101,10 @@
     if ((node.nodeName === "P" || node.nodeName === "LI") && node.closest && node.closest(".dlg-body")) {
       const pk = normText(node);
       const pv = tr(pk, true);
-      if (pv !== pk) { node.textContent = pv; return; }
+      /* 只在"整段都翻干净"时采纳：贪婪规则可能只译了前半句，
+         留下半中半英的整段，那就放弃整段、退回逐节点处理 */
+      const stillEnglish = /[A-Za-z]{3,}\s+[A-Za-z]{3,}/.test(pv);
+      if (pv !== pk && !stillEnglish) { node.textContent = pv; return; }
     }
     if (node.matches && node.matches(".dlg-body > div")) {
       const key = normText(node);
@@ -1195,6 +1199,52 @@
 
 
 
+
+
+
+  /* ---------- 第十四轮：阶段完成弹窗（标题/首句/下一步/新阶段） ---------- */
+  Object.assign(DICT, {
+    "Later": "稍后",
+    "Greenhouse Charge": "温室装药",
+  });
+
+  RULES.unshift(
+    [/^Stage (\d+) Complete · (.+) phase done$/i, (m) => "第 " + m[1] + " 阶段完成 · " + tr(m[2]) + "阶段结束"],
+    [/^Stage (\d+) Complete$/i, (m) => "第 " + m[1] + " 阶段完成"],
+    [/^Next · Stage (\d+)\/10: (.+)$/i, (m) => "下一步 · 阶段 " + m[1] + "/10：" + tr(m[2])],
+    [/^\(new phase: (.+?)\)\. (.+)$/i, (m) => { const t = tr(m[2]); return "（新阶段：" + tr(m[1]) + "）。" + (t === m[2] ? m[2] : t); }],
+    [/^\(new phase: (.+)\)$/i, (m) => "（新阶段：" + tr(m[1]) + "）"],
+    [/^\. (.+)$/, (m) => { const t = tr(m[1]); return t === m[1] ? m[0] : "。" + t; }],
+    [/^(.+) complete\.$/i, (m) => { const t = tr(m[1]); return t === m[1] ? m[0] : t + "完成。"; }],
+  );
+
+  /* ---------- 第十三轮：九个建造弹窗的整段（normText 归一化后的形式） ---------- */
+  Object.assign(HTML_MAP, {
+    "The Launch Pad is ready. The Launch tab is now open. Stock the rocket, run the pre-flight checks and fly it up to the supply ship to collect the parts.":
+      '<p><b>发射台已就绪。</b><b>发射</b>页已打开。给火箭装货，跑完起飞前检查，然后把它飞到补给船去取零件。</p>',
+    "The Launch Pad is ready. The Launch tab is now open. Launch 1 will fly to the abandoned Temperature Station and bring back the Heater.":
+      '<p><b>发射台已就绪。</b><b>发射</b>页已打开。1 号火箭将飞往废弃的温度空间站，把加热器带回来。</p>',
+    "The Heater is ready. Start it in the Terraform tab. It burns Greenhouse Charges: mine Sulfur and Copper Ore, craft Copper Wire, then craft the charges. Load them into the Heater, and the Auto-Loader upgrade will do it for you later.":
+      '<p><b>加热器已就绪。</b>在地形改造页启动它。</p><p>它燃烧<b>温室装药</b>：挖硫矿和铜矿，造铜线，再制造装药。把它们装进加热器，之后升级自动装料器就会替你完成。</p>',
+    "The hand pump is in. The Hydro tab is open. Mini-game: drag the crank handle clockwise. Keep cranking to build line pressure (up to ×1.4 water per turn). Upgrade Crank Gearing for more water per turn; at Lv 2 you can install motor pumps that work on their own.":
+      '<p><b>手动泵已装好。</b>水力页已打开。</p><p>小游戏：<b>顺时针拖动摇柄</b>。继续摇以积累管线压力（每圈最多 ×1.4 水量）。升级<b>摇柄齿轮</b>以获得更高的每圈水量；等级 2 可以安装<b>电机水泵</b>，它们会自己运转。</p>',
+    "The BioSpray Tower needs no power, only water: 8 L/s for full speed. Start it in the Terraform tab. Click dry red ground around the tower to spot-spray it.them yourself (15 L each).":
+      '<p><b>生物喷洒塔不用电，只用水：全速时 8 升/秒。</b></p><p>在地形改造页启动它。点击塔周围干燥的红色地面定点喷洒，也可以自己动手（每次 15 升）。</p>',
+    "Plant seeds in incubator trays, wait for them to ripen, then harvest 3 seeds per tray.":
+      '<p>在培养托盘里种下种子，等它们成熟，每盘可收 3 颗种子。</p>',
+    "Pick an animal in the Food Chain and press Decode. A row of letters appears: press the same letters in order (the next one is highlighted) before the timer runs out. Each decode costs Uranium Cells, shown on the Decode button. The Decoder lives in the Biolab tab.":
+      '<p>在食物链里选一种动物，然后按<b>解码</b>。会出现一排字母：在计时结束前<b>按顺序按下相同的字母</b>（下一个会高亮）。每次解码消耗铀电池，数量显示在「解码」按钮上。解码器位于<b>生物实验室</b>页。</p>',
+    "Load a decoded genome to grow an animal, then RELEASE it. Follow the food chain: insects (need flowers) → birds (eat insects) → large animals (eat birds, drink water). Each tier of the Incubator unlocks the next group.":
+      '<p>装入一份已解码基因组培养动物，然后<b>放生</b>它。按食物链来：<b>昆虫</b>（需要花卉）→ <b>鸟类</b>（吃昆虫）→ <b>大型动物</b>（吃鸟、喝水）。培养器每升一档解锁下一组。</p>',
+    "The Seed Spreader uses 0.8 E/s, 4 L/s of water and 1 seed every 5 s. Spread flowers first to turn the sky blue, then trees to bring clouds and rain.":
+      '<p>种子播撒器使用<b>0.8 能量/秒、4 升/秒的水，每 5 秒 1 颗种子</b>。先播撒<b>花卉</b>把天空变蓝，再播撒<b>树木</b>带来云和雨。</p>',
+  });
+
+  Object.assign(DICT, {
+    "flowers": "花卉", "trees": "树木", "tab.": "页。",
+    "Stock the rocket, run the pre-flight checks and fly it up to the supply ship to collect the parts.":
+      "给火箭装货，跑完起飞前检查，然后把它飞到补给船去取零件。",
+  });
 
   /* ---------- 第十二轮：解锁框（unlockBox）内的条目与 ★ 前缀 ---------- */
   Object.assign(DICT, {
@@ -1310,10 +1360,11 @@
     "Lichen","Moss","Poppy","Dandelion","Sunflower","Oak","Aspen","Pine","Water","Energy",
     "Terraform Drill","BioSpray Tower","Seed Spreader","Seed Synthesizer","Water Pump","Heater","Launch Pad","Mining Rig",
     "Auto Crafter","Embryo Incubator","Genome Decoder","Crafting Dome","Solar Panel","Battery"];
+  const EMBED_SORTED = [...EMBED].sort((a, b) => b.length - a.length);
   function embed(out) {
     if (!/[A-Za-z]{3}/.test(out)) return out;
     let r = out;
-    for (const en of EMBED) {
+    for (const en of EMBED_SORTED) {
       if (!r.includes(en)) continue;
       const zh = DICT[en];
       if (zh) r = r.split(en).join(zh);
@@ -1426,7 +1477,7 @@
   });
 
   /* ---------- 第五轮：对话气泡（带 <b> 标签整句）与零散漏网 ---------- */
-  const HTML_MAP = {
+  Object.assign(HTML_MAP, {
     "Hi! I'm Sprocket, your colony assistant. I'm here to help you terraform Mars. Want a quick tour?":
       "你好！我是<b>斯普罗凯特</b>，你的殖民地助手。我来帮你改造火星，要不要先快速导览一遍？",
     "These are your Mission Goals. Work through them and Mars moves on to its next stage.":
@@ -1467,7 +1518,7 @@
       "<p>矿井页已经打开。</p><p>下一个目标：建造<b>改造钻机</b>。</p>",
     "The Hydro tab is now open. Next goal: build the BioSpray Tower.":
       "<p>水力页已经打开。</p><p>下一个目标：建造<b>生物喷洒塔</b>。</p>",
-  };
+  });
 
   const BLK = /^(P|DIV|LI|BR|UL|OL|H[1-6]|TABLE|TR|TD|SECTION|FIELDSET|LEGEND)$/;
   function normText(el) {
