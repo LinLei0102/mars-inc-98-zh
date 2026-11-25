@@ -1202,6 +1202,54 @@
 
 
 
+
+
+  /* ---------- 第十六轮：食物链头部整段、HUD 与零散碎片 ---------- */
+  Object.assign(DICT, {
+    "Biodiversity": "生物多样性",
+    "Ecosystem": "生态系统",
+    "Insects": "昆虫", "Birds": "鸟类", "Large animals": "大型动物",
+    "Genome Bank": "基因组库",
+    "species living on Mars": "火星上的物种",
+    "Water pumps": "水泵",
+    "decoded genomes": "已解码基因组",
+    "Automation: loads stored genomes into free slots and releases grown animals for you.":
+      "自动化：把库存的基因组装进空槽，并替你放生成熟的动物。",
+  });
+
+  RULES.unshift(
+    [/^Needs Incubator (T\d+) · grows in (\d+) s · \+(\d+)% Life \(first of a species \+(\d+)%\)((?: · .*)?)$/i,
+      (m) => "需要培养器 " + m[1] + " · " + m[2] + " 秒长成 · 生命 +" + m[3] + "%（该物种首次 +" + m[4] + "%）" + (m[5] ? tr(m[5]) : "")],
+    [/^Water pumps ×(\d+)(?: (.+))?$/i, (m) => "水泵 ×" + m[1] + (m[2] ? " " + m[2] : "")],
+    [/^LIFE (\d+)%?$/i, (m) => "生命 " + m[1] + "%"],
+    [/^(T\d) of (T\d+)$/i, (m) => m[1] + " / " + m[2]],
+  );
+
+  /* ---------- 第十五轮：生物实验室食物链 / 发射记录 / 阶段标签 ---------- */
+  Object.assign(DICT, {
+    "Temperature phase": "温度阶段", "Soil phase": "土壤阶段",
+    "Oxygen phase": "氧气阶段", "Life phase": "生命阶段",
+    "The Seed of Life has been returned.": "生命之种已带回。",
+    "Complete": "已完成", "Planted": "已种植",
+    "Nursery Drone on": "培育无人机开启",
+  });
+
+  RULES.unshift(
+    [/^NATURE RESERVE · (\d+)\/9 SPECIES$/i, (m) => "自然保护区 · " + m[1] + "/9 种"],
+    [/^Insects (\d+) · Birds (\d+) · Large (\d+) released · (\d+)\/9 species( · Nursery Drone on)?$/i,
+      (m) => "昆虫 " + m[1] + " · 鸟类 " + m[2] + " · 大型 " + m[3] + " 已放生 · " + m[4] + "/9 种" + (m[5] ? " · 培育无人机开启" : "")],
+    [/^· costs 2 flower seeds each \(any flower\) · you have (\d+): grow more in the Biolab$/i,
+      (m) => "· 每只消耗 2 颗花种（任意花卉）· 你有 " + m[1] + " 颗：去生物实验室培育更多"],
+    [/^· 2 insects released per bird$/i, () => "· 每只鸟需要先放生 2 只昆虫"],
+    [/^· 1 bird released each \+ 100 L water$/i, () => "· 每只需要 1 只鸟 + 100 升水"],
+    [/^Needs (\d+) insects released as food \((\d+) so far\)$/i, (m) => "需要先放生 " + m[1] + " 只昆虫作为食物（目前 " + m[2] + " 只）"],
+    [/^Needs (\d+) birds released \((\d+) so far\)$/i, (m) => "需要先放生 " + m[1] + " 只鸟（目前 " + m[2] + " 只）"],
+    [/^LAUNCHES (\d+)\/2$/i, (m) => "发射 " + m[1] + "/2"],
+    [/^Needs Incubator (T\d+)$/i, (m) => "需要培养器 " + m[1]],
+    [/^decoded genomes · (\d+) Uranium Cells$/i, (m) => m[1] + " 份已解码基因组 · " + m[1] + " 枚铀电池"],
+    [/^species living on Mars · Life (\d+)%$/i, (m) => "火星上的物种 · 生命 " + m[1] + "%"],
+  );
+
   /* ---------- 第十四轮：阶段完成弹窗（标题/首句/下一步/新阶段） ---------- */
   Object.assign(DICT, {
     "Later": "稍后",
